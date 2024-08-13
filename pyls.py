@@ -6,7 +6,7 @@ from datetime import datetime
 parser = argparse.ArgumentParser(
     prog="pyls",
     description="Lists files in given or current directory",
-    epilog="Poor man's ls",
+    epilog= "This tool mimics the basic functionality of the Unix 'ls' command. Use it to list directory contents with options for displaying detailed file information and file type indicators."
 )
 
 parser.add_argument(
@@ -34,6 +34,24 @@ parser.add_argument(
 args = parser.parse_args()
 
 def main(args) :
+    """
+    Main function that orchestrates the execution of the pyls program.
+
+    Args:
+    args (argparse.Namespace): Parsed command line arguments containing:
+        - dirname (str): The directory whose contents are to be listed.
+        - long_format (bool): Flag indicating whether to display detailed file information.
+        - filetype (bool): Flag indicating whether to append file type indicators.
+
+    The function:
+    1. Retrieves a list of file descriptions based on the specified directory.
+    2. Formats the file descriptions according to the specified options.
+    3. Displays the formatted results to the user.
+    """
+    results = get_descriptions_of_files_in_dir(args.dirname, args.long_format, args.filetype)
+    lines = format_results(results, args.long_format, args.filetype)
+    display_results(lines)
+
     results = get_descriptions_of_files_in_dir(args.dirname, args.long_format, args.filetype)
     lines = format_results(results, args.long_format, args.filetype)
     display_results(lines)
