@@ -35,7 +35,8 @@ args = parser.parse_args()
 
 def main(args) :
     results = get_descriptions_of_files_in_dir(args.dirname, args.long_format, args.filetype)
-    display_results(results)
+    lines = format_results(results, args.long_format, args.filetype)
+    display_results(lines)
 
 def get_descriptions_of_files_in_dir(dirname, long_format, filetype):
     """
@@ -66,7 +67,32 @@ def get_descriptions_of_files_in_dir(dirname, long_format, filetype):
     return descriptions
 
 def format_results(results, long_format, filetype):
-    pass # Placeholder for implementation
+    """
+    Formats a list of file descriptions for display.
+
+    Args:
+    results (list): List of dictionaries like returned by get_descriptions_of_files_in_dir().
+    long_format (bool): Boolean that indicates long format output.
+    filetype (bool): Boolean that indicates ask for extra type descriptor character at end.
+
+    Returns:
+    list: A list of formatted strings.
+    """
+    
+    lines = []
+    for result in results:
+        if long_format:
+            line = f"{result['modtime'].strftime('%Y-%m-%d %H:%M:%S')} {result['filesize']:>6} {result['filename']}"
+        else:
+            line = result['filename']
+        if filetype:
+            if result['filetype'] == 'd':
+                line += '/'
+            elif result['filetype'] == 'x':
+                line += '*'
+        lines.append(line)
+    return lines
+
 
 def display_results(lines):
     for line in lines: 
