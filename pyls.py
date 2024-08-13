@@ -32,3 +32,45 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+
+def main(args) :
+    results = get_descriptions_of_files_in_dir(args.dirname, args.long_format, args.filetype)
+    display_results(results)
+
+def get_descriptions_of_files_in_dir(dirname, long_format, filetype):
+    """
+    Lists the files and folders in the given directory
+    and constructs a list of dicts with the required information.
+
+    Args:
+    dirname (str): The directory whose contents are to be listed.
+    long_format (bool): True if the user has asked for the long format.
+    filetype (bool): True if the user has asked for file type info as well.
+
+    Returns:
+    list: A list of dictionaries each with keys - filename, filetype, modtime, filesize.
+    """
+    entries = os.listdir(dirname)
+    descriptions = []
+    for entry in entries:
+        full_path = os.path.join(dirname, entry)
+        modtime = datetime.fromtimestamp(os.path.getmtime(full_path))
+        filesize = os.path.getsize(full_path) if not os.path.isdir(full_path) else 0
+        file_type = 'd' if os.path.isdir(full_path) else 'x' if os.access(full_path, os.X_OK) else 'f'
+        descriptions.append({
+            "filename": entry,
+            "filetype": file_type,
+            "modtime": modtime,
+            "filesize": filesize,
+        })
+    return descriptions
+
+def format_results(results, long_format, filetype):
+    pass # Placeholder for implementation
+
+def display_results(lines):
+    for line in lines: 
+        print(line)
+
+if __name__ == "__main__":
+    main(args)
